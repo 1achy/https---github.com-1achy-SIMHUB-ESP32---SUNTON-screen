@@ -97,8 +97,8 @@ public:
 	// Called when starting the arduino (setup method in main sketch)
 	void setup()
 	{
-	  //  Serial.begin(115200);   //x debug
-      //  Serial.println("Test seriale avviato!"); //x debug
+	 //   Serial.begin(115200);   //x debug
+     //   Serial.println("Test seriale avviato!"); //x debug
 		
 		
 		tft.init();
@@ -204,6 +204,7 @@ public:
 	void loop()
 	{
         readTouch(); // Leggi il touchscreen dello schermo
+		
 		drawRpmMeter(0, 0, SCREEN_WIDTH, HALF_CELL_HIGHT);
 		drawGear(COL[2], COL[1]);
 				
@@ -368,32 +369,34 @@ public:
 
         {
             tft.fillCircle(touchX, touchY, 5, TFT_RED); // Visualizza le coordinate del tocco PER DEBUG	
-		//	  Serial.print("Tocco rilevato alle coordinate: "); //x debug
-        //    Serial.print(touchX); //x debug
-        //    Serial.print(", "); //x debug
-        //    Serial.println(touchY); //x debug
+			  Serial.print("Tocco rilevato alle coordinate: "); //x debug
+            Serial.print(touchX); //x debug
+            Serial.print(", "); //x debug
+            Serial.println(touchY); //x debug
 
-            // Process touch event here
-            // E.g., map touch coordinates to specific actions or buttons
 
 // Questa sezione del codice gestisce il rilevamento del tocco sullo schermo e mappa le coordinate del tocco a un pulsante 
 // virtuale, inviando quindi un comando tramite Bluetooth utilizzando il BleGamepad. Ecco una spiegazione dettagliata di ciò 
 // che fa ogni parte del codice:
 
-	            int buttonIndex = getTouchButtonIndex(touchX, touchY);
+	        int buttonIndex = getTouchButtonIndex(touchX, touchY);
 
-        //        Serial.print("Indice pulsante: ");  //x debug
-        //        Serial.println(buttonIndex);       //x debug
+            //  Serial.print("Indice pulsante: ");  //x debug
+            //  Serial.println(buttonIndex);       //x debug
 
             if (buttonIndex != -1)
             {
                 bleGamepad.press(buttonIndex + 1);
+
+			//	Serial.print("Pulsante ");          //x debug
+         	//	Serial.print(buttonIndex + 1);       //x debug
+            //  Serial.println("premuto");   //x debug
+
                 delay(100); // debounce delay
                 bleGamepad.release(buttonIndex + 1);
-		//		Serial.print("Pulsante ");          //x debug
-        // 		Serial.print(buttonIndex + 1);       //x debug
-        //      Serial.println(" premuto e rilasciato.");   //x debug
-
+	        //  Serial.print("Pulsante ");          //x debug
+            //  Serial.print(buttonIndex + 1);     //x debug
+            //  Serial.println(" rilasciato.");   //x debug
             }		
         }
     }
@@ -408,7 +411,7 @@ public:
         int buttonHeight = SCREEN_HEIGHT / 2;
         int col = x / buttonWidth;
         int row = y / buttonHeight;
-        return col + row * 3; // return button index (0 to 5)
+        return col + row * 3; // Restituisce l'indice del pulsante (0 a 5)
     }
 
 };
