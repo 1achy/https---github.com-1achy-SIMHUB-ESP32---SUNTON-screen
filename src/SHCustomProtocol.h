@@ -368,7 +368,7 @@ public:
 		        
 
         {
-            tft.fillCircle(touchX, touchY, 5, TFT_RED); // Visualizza le coordinate del tocco PER DEBUG	
+        //    tft.fillCircle(touchX, touchY, 5, TFT_RED); // Visualizza le coordinate del tocco PER DEBUG	
 		//	  Serial.print("Tocco rilevato alle coordinate: "); //x debug
         //    Serial.print(touchX); //x debug
         //    Serial.print(", "); //x debug
