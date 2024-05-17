@@ -6,7 +6,7 @@
 // #include <LGFX_AUTODETECT.hpp>  // Preparare la classe "LGFX"
 // #include <lgfx_user/LGFX_ESP8266_sample.hpp>
 #include <lgfx_user/LGFX_ESP32_esp32-2432s028.hpp> 
-
+// solo dashboard
 #include <Arduino.h>
 #include <map>
 #include <BleGamepad.h> // libreria bluetooh
@@ -315,8 +315,8 @@ public:
 
 		tft.setTextColor(color, TFT_BLACK);
 
-		const bool dataChanged =  (prevData[id] != data);
-		const bool colorChanged =  (prevColor[id] != color);
+		const bool dataChanged =  (prevData[id] != data);    // variabilò per vedere cambiamento dati e cambiare valori sullo schermo
+		const bool colorChanged =  (prevColor[id] != color); // variabilò per vedere cambiamento dati e disegnare sullo schermo
 
 		if (dataChanged) {
 
