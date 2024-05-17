@@ -1,3 +1,4 @@
+
 #ifndef __SHCUSTOMPROTOCOL_H__
 #define __SHCUSTOMPROTOCOL_H__
 #define LGFX_USE_V1
@@ -66,7 +67,8 @@ private:
 	String brake = "0";
 	String lapInvalidated = "False";
     uint16_t touchX, touchY;	// definisce i due interi per gestione touchscreen
-	
+
+	int numButtons = 6; // Variabile per il numero di pulsanti
 
 public:
 	/*
@@ -111,7 +113,7 @@ public:
         bleGamepadConfig.setIncludeRxAxis(false);
         bleGamepadConfig.setIncludeRyAxis(false);
         bleGamepadConfig.setIncludeRzAxis(false);
-        bleGamepadConfig.setButtonCount(6);  // 6 touch buttons
+        bleGamepadConfig.setButtonCount(numButtons);  // Variabile per il numero di pulsanti
         bleGamepad.begin(&bleGamepadConfig);
     // Serial.println("Configurazione BleGamepad completata.");   //x debug
 	}
@@ -209,29 +211,42 @@ public:
 		drawCell(COL[4], ROW[4], tyrePressureRearRight, "tyrePressureRearRight", "RR", "center", TFT_CYAN, 4, forceUpdate);
 	}
 
-void drawPage2()
-{
-    int buttonWidth = SCREEN_WIDTH / 3;
-    int buttonHeight = SCREEN_HEIGHT / 2;
-    String buttonLabels[6] = {"Button 1", "Button 2", "Button 3", "Button 4", "Button 5", "Button 6"};
-    uint16_t buttonColors[6] = {TFT_RED, TFT_GREEN, TFT_BLUE, TFT_YELLOW, TFT_ORANGE, TFT_PURPLE};
+	void drawColoredButton(int x, int y, int width, int height, String label, uint16_t color)   //disegna i pulsanti della pagina 2
+	{
+    // Draw the dark background for the button
+    tft.fillRoundRect(x, y, width, height, 10, TFT_BLACK);
 
-    for (int i = 0; i < 6; i++) {
-        int x = (i % 3) * buttonWidth;
-        int y = (i / 3) * buttonHeight;
-        drawButton(x, y, buttonWidth, buttonHeight, buttonLabels[i], buttonColors[i]);
-    }
-}
+    // Draw the top and bottom color edges
+    tft.fillRoundRect(x + 2, y + 14, width - 4, height / 5, 10, color); // Top edge
+    tft.fillRoundRect(x + 2, y + height - height / 5 - 14, width - 4, height / 5, 10, color); // Bottom edge
 
-void drawButton(int x, int y, int width, int height, String label, uint16_t color)
-{
-    tft.fillRect(x, y, width, height, color);
-    tft.drawRect(x, y, width, height, TFT_WHITE);
-    tft.setTextColor(TFT_WHITE, color);
+    // Draw the inner color
+    tft.fillRoundRect(x + 2, y + height / 5 + 2, width - 4, height * 3 / 5 - 4, 10, TFT_PURPLE);
+
+    // Draw the label text in white
+    tft.setTextColor(TFT_WHITE, TFT_PURPLE);
     tft.setTextDatum(MC_DATUM);
     tft.drawString(label, x + width / 2, y + height / 2);
     tft.setTextDatum(TL_DATUM);
 }
+
+void drawPage2() // pagina pulsanti
+{
+    int buttonWidth = SCREEN_WIDTH / 3;
+    int buttonHeight = SCREEN_HEIGHT / 2;
+    String buttonLabels[] = {"In-game", "Offline", "Pit", "TC", "ABS", "Streamig"}; // Sostituisci con le etichette desiderate
+    uint16_t buttonColors[] = {TFT_RED, TFT_GREEN, TFT_BLUE, TFT_YELLOW, TFT_ORANGE, TFT_PURPLE};
+
+    for (int i = 0; i < numButtons; i++) {
+        int x = (i % 3) * buttonWidth;
+        int y = (i / 3) * buttonHeight;
+        drawColoredButton(x, y, buttonWidth, buttonHeight, buttonLabels[i], buttonColors[i]);
+    }
+}
+
+
+
+
 
 	void drawGear(int32_t x, int32_t y)
 	{
@@ -349,39 +364,40 @@ void drawButton(int x, int y, int width, int height, String label, uint16_t colo
 
 	}
 
-void readTouch()
-{
-    if (currentPage == 2) {
-        if (tft.getTouch(&touchX, &touchY)) {
-            int buttonIndex = getTouchButtonIndex(touchX, touchY);
+	void readTouch()
+	{
+		if (currentPage == 2) {
+			if (tft.getTouch(&touchX, &touchY)) {
+				int buttonIndex = getTouchButtonIndex(touchX, touchY);
 
-            if (buttonIndex != -1) {
-                // Effetto di pressione
-                int x = (buttonIndex % 3) * (SCREEN_WIDTH / 3);
-                int y = (buttonIndex / 3) * (SCREEN_HEIGHT / 2);
-                drawButton(x, y, SCREEN_WIDTH / 3, SCREEN_HEIGHT / 2, "Pressed", TFT_DARKGREY);
+				if (buttonIndex != -1) {
+					// Effetto di pressione
+					int x = (buttonIndex % 3) * (SCREEN_WIDTH / 3);
+					int y = (buttonIndex / 3) * (SCREEN_HEIGHT / 2);
+					drawColoredButton(x, y, SCREEN_WIDTH / 3, SCREEN_HEIGHT / 2, "Pressed", TFT_DARKGREY);
 
-                bleGamepad.press(buttonIndex + 1);
-                delay(100); // debounce delay
-                bleGamepad.release(buttonIndex + 1);
+					bleGamepad.press(buttonIndex + 1);
+					delay(100); // debounce delay
+					bleGamepad.release(buttonIndex + 1);
 
-                // Ripristina il pulsante dopo la pressione
-                String buttonLabels[6] = {"Button 1", "Button 2", "Button 3", "Button 4", "Button 5", "Button 6"};
-                uint16_t buttonColors[6] = {TFT_RED, TFT_GREEN, TFT_BLUE, TFT_YELLOW, TFT_ORANGE, TFT_PURPLE};
-                drawButton(x, y, SCREEN_WIDTH / 3, SCREEN_HEIGHT / 2, buttonLabels[buttonIndex], buttonColors[buttonIndex]);
-            }
-        }
-    }
-}
+					// Ripristina il pulsante dopo la pressione
+					String buttonLabels[] = {"Button 1", "Button 2", "Button 3", "Button 4", "Button 5", "Button 6"};
+					uint16_t buttonColors[] = {TFT_RED, TFT_GREEN, TFT_BLUE, TFT_YELLOW, TFT_ORANGE, TFT_PURPLE};
+					drawColoredButton(x, y, SCREEN_WIDTH / 3, SCREEN_HEIGHT / 2, buttonLabels[buttonIndex], buttonColors[buttonIndex]);
+				}
+			}
+		}
+	}
 
-int getTouchButtonIndex(int x, int y)
-{
-    int buttonWidth = SCREEN_WIDTH / 3;
-    int buttonHeight = SCREEN_HEIGHT / 2;
-    int col = x / buttonWidth;
-    int row = y / buttonHeight;
-    return col + row * 3; // Restituisce l'indice del pulsante (0 a 5)
-}
+	int getTouchButtonIndex(int x, int y)
+	{
+		int buttonWidth = SCREEN_WIDTH / 3;
+		int buttonHeight = SCREEN_HEIGHT / 2;
+		int col = x / buttonWidth;
+		int row = y / buttonHeight;
+		int index = col + row * 3;
+		return (index < numButtons) ? index : -1; // Restituisce l'indice del pulsante (0 a numButtons-1)
+	}
 };
 
 #endif
