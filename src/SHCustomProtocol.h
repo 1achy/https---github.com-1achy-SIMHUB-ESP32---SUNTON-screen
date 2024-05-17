@@ -305,6 +305,8 @@ public:
 		prev_rpmPercent = rpmPercent;
 	}
 
+// La funzione drawCell disegna una cella sullo schermo e aggiorna il suo contenuto solo se i dati o il colore sono cambiati. 
+
 	void drawCell(int32_t x, int32_t y, String data, String id, String name = "Data", String align = "center", int32_t color = TFT_WHITE, int fontSize = 4)
 	{
 		const static int titleHeight = 19;
