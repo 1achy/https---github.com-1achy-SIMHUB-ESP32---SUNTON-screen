@@ -92,7 +92,9 @@ SimHub should see the virtual port as a normal COM port, and it should be able t
 
 ## How to configure SimHub to use custom protocol
 SimHub should config use custom protocol:
-1) go in menu   ![Alt text](foto/customprotocol.png)
+1) go in menu
+   ![Alt text](foto/customprotocol.png)
+   
 2)  copy text :https://github.com/1achy/https---github.com-1achy-SIMHUB-ESP32---SUNTON-screen/blob/main/istruzioni%20simhub%20protocol%20custom/customProtocol-dashBoard.txt
 3)  paste
 
