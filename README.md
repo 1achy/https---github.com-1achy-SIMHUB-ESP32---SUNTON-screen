@@ -98,6 +98,8 @@ SimHub should config use custom protocol:
 2)  copy text :https://github.com/1achy/https---github.com-1achy-SIMHUB-ESP32---SUNTON-screen/blob/main/istruzioni%20simhub%20protocol%20custom/customProtocol-dashBoard.txt
 3)  paste
 
+P.S.: More info : https://github.com/SHWotever/SimHub/wiki/Custom-Arduino-hardware-support
+
 ## ESP32 Support Caveats
 Some Arduino APIs for the ESP32 are different, so not everything will work out of the box, but I got the WiFi bridge working and the ShakeIt fans with some effort, as you need to use different includes etc. It's very likely that other features that I haven't tested will need tweaks. But if you're willing to experiment with this, feel free to do so. Checkout this PR https://github.com/eCrowneEng/ESP-SimHub/pull/1 as an example of the things you need to do to achieve compatibility.
 
